@@ -1,0 +1,72 @@
+# --------------------
+# Dart/Flutter specific files
+# --------------------
+
+# Dependencies and lock file
+.packages
+pubspec.lock
+
+# Build outputs and cache
+/build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.gradle/
+.idea/libraries/
+
+# iOS/macOS related files
+/ios/
+/macos/
+/test/
+/test_driver/
+/android/
+/web/
+# Only include the specific generated files, but not the whole directories
+# to allow source control of native configuration files.
+ios/Flutter/Generated.xcconfig
+ios/Flutter/App.framework
+ios/Flutter/flutter_assets
+ios/Flutter/Flutter.podspec
+ios/Flutter/Generated.xcconfig
+macos/Flutter/GeneratedPluginRegistrant.swift
+macos/Flutter/GeneratedPluginRegistrant.h
+macos/Flutter/ephemeral/
+
+# Android related files
+android/.gradle
+android/local.properties
+android/key.properties
+android/.idea/
+android/build
+android/app/build
+android/app/src/main/assets/flutter_assets
+android/gradlew
+android/gradlew.bat
+
+# Web/JavaScript related files
+/web/
+/web/main.dart.js
+/web/main.dart.js.map
+/web/index.html
+
+# Generated files for code generation (e.g., Freezed, build_runner)
+*.g.dart
+*.freezed.dart
+*.gr.dart  # for auto_route
+*.chopper.dart
+
+# --------------------
+# IDE and OS Specific Files
+# --------------------
+
+# IntelliJ/Android Studio
+.idea/
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
