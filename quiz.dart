@@ -1,140 +1,130 @@
-// --- Model Classes ---
-
-import 'dart:math';
 import 'dart:io';
+import './models/Answer.dart';
+import './models/Question.dart';
+import './models/Quiz.dart';
+import './models/QuizCategory.dart';
+import './data/dartProgrammingQuiz.dart';
+import './data/mathQuiz.dart';
+import './data/javascriptQuiz.dart';
+import './data/cppQuiz.dart';
+import './data/reactQuiz.dart';
+import './data/nextjsQuiz.dart' ;
+import './data/backendQuiz.dart';
+import './data/flutterQuiz.dart';
+import './data/expressJsQuiz.dart';
+import './data/nodeJsQuiz.dart';
+import './data/mongoDbQuiz.dart';
 
-// The Answer class represents a user's choice and whether it was correct.
-class Answer {
-  String answerChoice;
-  bool isGoodAnswer;
+String getUserSelection(Question question) {
+  
+  Map<int, String> optionMap = {};
+  for (int i = 0; i < question.choices.length; i++) {
+    optionMap[i + 1] = question.choices[i];
+    print('[${i + 1}]. ${question.choices[i]}');
+  }
 
-  Answer({
-    required this.answerChoice,
-    required this.isGoodAnswer,
-  });
-}
+  String? input;
+  int? choiceIndex;
 
-// The Question class represents a single question in the quiz.
-class Question {
-  String title;
-  List<String> choices;
-  String goodChoice; // The correct choice
+  // Input validation loop
+  do {
+    stdout.write('\n>>> Select (1-${question.choices.length}): ');
+    input = stdin.readLineSync();
+    choiceIndex = int.tryParse(input ?? '');
 
-  Question({
-    required this.title,
-    required this.choices,
-    required this.goodChoice,
-  });
-}
 
-// The Quiz class manages the questions, answers, and score.
-class Quiz {
-  final List<Question> questions;
-  final List<Answer> userAnswers = [];
-  int _currentQuestionIndex = 0;
-
-  Quiz({required this.questions});
-
-  // Getter for the current question
-  Question? get currentQuestion {
-    if (_currentQuestionIndex < questions.length) {
-      return questions[_currentQuestionIndex];
+    if (choiceIndex == null || choiceIndex < 1 || choiceIndex > question.choices.length) {
+      print('Invalid input. Please enter a number between 1 and ${question.choices.length}.');
     }
-    return null; // Quiz is completed
-  }
+  } while (choiceIndex == null || choiceIndex < 1 || choiceIndex > question.choices.length);
 
-  // Getter to check if the quiz is finished
-  bool get isFinished => _currentQuestionIndex >= questions.length;
-
-  // Method to record a user's answer and advance to the next question.
-  void addAnswer(String selectedChoice) {
-    if (currentQuestion == null) return; // Quiz already finished
-
-    // 1. Determine if the answer is correct
-    bool isCorrect = selectedChoice == currentQuestion!.goodChoice;
-
-    // 2. Create and record the Answer object
-    Answer newAnswer = Answer(
-      answerChoice: selectedChoice,
-      isGoodAnswer: isCorrect,
-    );
-    userAnswers.add(newAnswer);
-
-    // 3. Move to the next question
-    _currentQuestionIndex++;
-  }
-
-  // Method to calculate and return the current score.
-  int getScore() {
-    return userAnswers.where((answer) => answer.isGoodAnswer).length;
-  }
+  return optionMap[choiceIndex]!;
 }
 
-// -----------------------------------------------------------------------------
 
-// Example Usage (for demonstration)
+
 void main() {
-  // 1. Define the quiz questions
-  final questions = [
-    Question(
-      title: "What is the result of 9 * 7?",
-      choices: ["63", "56", "72", "49"],
-      goodChoice: "63",
-    ),
-    Question(
-      title: "Which programming language is Flutter built with?",
-      choices: ["Java", "Python", "Dart", "Swift"],
-      goodChoice: "Dart",
-    ),
-    Question(
-      title: "What is the capital of Canada?",
-      choices: ["Toronto", "Vancouver", "Ottawa", "Montreal"],
-      goodChoice: "Ottawa",
-    ),
+
+  
+  // 2. Create the list of Quiz Categories
+  final List<Quizcategory> categories = [
+    Quizcategory(name: "Dart Programming Quiz", questions: dartQuestions),
+    Quizcategory(name: "General Knowledge & Math Quiz", questions: mathQuestions),
+    Quizcategory(name: "JavaScript Quiz", questions: javascriptQuestions),
+    Quizcategory(name: "C++ Programming Quiz", questions: cppQuestions),
+    Quizcategory(name: "React Quiz", questions: reactQuestions),
+    Quizcategory(name: "Next.js Quiz", questions: nextjsQuestions),
+    Quizcategory(name: "Backend Development Quiz", questions: backendQuestions),
+    Quizcategory(name: "Flutter Quiz", questions: flutterQuestions),
+    Quizcategory(name: "Express.js Quiz", questions: expressjsQuestions),
+    Quizcategory(name: "Node.js Quiz", questions: nodejsQuestions),
+    Quizcategory(name: "MongoDB Quiz", questions: mongodbQuestions),
+
+
   ];
 
-  // 2. Initialize the Quiz
-  final quiz = Quiz(questions: questions);
-  print('--- Welcome to the Dart Quiz! ---');
+  print('=' * 40);
+  print('------  Welcome to the Quiz CLI!  ------');
+  print('=' * 40);
 
-  // 3. Quiz loop
+  // 3. Category Selection Loop
+  print('\nPlease select a quiz category: \n');
+  
+  Map<int, Quizcategory> categoryMap = {};
+  for (int i = 0; i < categories.length; i++) {
+    categoryMap[i + 1] = categories[i];
+    print('[${i + 1}]. ${categories[i].name}');
+  }
+
+  String? input;
+  int? categoryIndex;
+  
+  // Input validation for category choice
+  do {
+    stdout.write('\n>>> Enter the category number: ');
+    input = stdin.readLineSync();
+    categoryIndex = int.tryParse(input ?? '');
+    
+    if (categoryIndex == null || categoryIndex < 1 || categoryIndex > categories.length) {
+      print('Invalid selection. Please choose a number between 1 and ${categories.length}.');
+    }
+  } while (categoryIndex == null || categoryIndex < 1 || categoryIndex > categories.length);
+
+  // 4. Initialize the Quiz with the selected category's questions
+  final selectedCategory = categoryMap[categoryIndex]!;
+  final quiz = Quiz(questions: selectedCategory.questions);
+  
+  print('\n Starting: ${selectedCategory.name}');
+  print('Total Questions: ${quiz.questions.length}');
+
+
   while (quiz.currentQuestion != null) {
     Question currentQ = quiz.currentQuestion!;
-    print('\n[Question ${quiz.userAnswers.length + 1}/${quiz.questions.length}]');
-    print('${currentQ.title}\n');
+    int qNum = quiz.userAnswers.length + 1;
     
-    // Display choices with number mapping
-    Map<int, String> optionMap = {};
-    for (int i = 0; i < currentQ.choices.length; i++) {
-      optionMap[i + 1] = currentQ.choices[i];
-      print('[${i + 1}]. ${currentQ.choices[i]}');
-    }
-
-    // Get user input
-    String? input;
-    int? choiceIndex;
-
-    // Input validation loop
-    do {
-      stdout.write('Select (1-${currentQ.choices.length}): ');
-      input = stdin.readLineSync();
-      choiceIndex = int.tryParse(input ?? '');
-    } while (choiceIndex == null || choiceIndex < 1 || choiceIndex > currentQ.choices.length);
+    print('\n' + '-' * 40);
+    print('QUESTION $qNum: ${currentQ.title}');
     
-    // Get the selected choice string
-    String selectedChoice = optionMap[choiceIndex]!;
+    // Get user selection using the helper function
+    String selectedChoice = getUserSelection(currentQ);
 
     // Record the answer and advance
     quiz.addAnswer(selectedChoice);
     
-    // Optional feedback
+    // Feedback
     bool wasCorrect = quiz.userAnswers.last.isGoodAnswer;
-    print(wasCorrect ? '✅ Correct!' : '❌ Incorrect. The answer was ${currentQ.goodChoice}.');
+    if (wasCorrect) {
+      print('\n✅ CORRECT! Keep going...');
+    } else {
+      print('\n❌ INCORRECT! The correct answer was: ${currentQ.goodChoice}.');
+    }
   }
 
-  // 4. Final Score
-  print('\n=======================================');
-  print('          QUIZ COMPLETED! 🥳          ');
+  // 6. Final Score
+  print('\n' + '=' * 40);
+  print('          QUIZ COMPLETED!           ');
+  print('Quiz Name: ${selectedCategory.name}');
   print('Your Final Score is: ${quiz.getScore()} / ${quiz.questions.length}');
-  print('=======================================');
+  print('\n' + '=' * 40);
+
 }

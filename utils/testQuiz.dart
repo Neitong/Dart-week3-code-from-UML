@@ -1,14 +1,9 @@
-// --- Unit Tests (Requires 'package:test/test.dart') ---
-
+import '../models/answer.dart';
+import '../models/Question.dart';
+import '../models/quiz.dart';
 import 'package:test/test.dart';
-// import 'package:quiz.dart';
-// Note: In a real Dart project, you would import your model files here.
-// For this example, we assume the model classes are accessible.
-
-// We will use the model classes defined above: Answer, Question, Quiz.
 
 void main() {
-  // Test suite for the Answer class
   group('Answer Class', () {
     test('Correct Answer isGoodAnswer should be true', () {
       final answer = Answer(answerChoice: 'Option A', isGoodAnswer: true);
@@ -22,7 +17,6 @@ void main() {
     });
   });
 
-  // Test suite for the Question class
   group('Question Class', () {
     test('Question attributes should be initialized correctly', () {
       final question = Question(
@@ -36,12 +30,10 @@ void main() {
     });
   });
 
-  // Test suite for the Quiz class
   group('Quiz Class', () {
     late Quiz quiz;
     late List<Question> testQuestions;
 
-    // Setup function to run before each test
     setUp(() {
       testQuestions = [
         Question(
